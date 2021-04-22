@@ -5,12 +5,14 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { EmpComp } from './components/employee/emp.comp';
 import { EmpListComp } from './components/employee/emp-list/emp-list.comp';
+import { EmpModalComp } from './components/employee/emp-modal/emp-modal.comp';
 
 @NgModule({
   declarations: [
     AppComponent,
     EmpComp,
     EmpListComp,
+    EmpModalComp,
   ],
   imports: [
     BrowserModule,
