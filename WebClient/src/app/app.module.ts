@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { EmpComp } from './components/employee/emp.comp';
 import { EmpListComp } from './components/employee/emp-list/emp-list.comp';
 import { EmpModalComp } from './components/employee/emp-modal/emp-modal.comp';
+import { DepComp } from './components/department/dep.comp';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { EmpModalComp } from './components/employee/emp-modal/emp-modal.comp';
     EmpComp,
     EmpListComp,
     EmpModalComp,
+    DepComp,
   ],
   imports: [
     BrowserModule,
