@@ -8,6 +8,7 @@ import { EmpListComp } from './components/employee/emp-list/emp-list.comp';
 import { EmpModalComp } from './components/employee/emp-modal/emp-modal.comp';
 import { DepComp } from './components/department/dep.comp';
 import { DepListComp } from './components/department/dep-list/dep-list.comp';
+import { DepModalComp } from './components/department/dep-modal/dep-modal.comp';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { DepListComp } from './components/department/dep-list/dep-list.comp';
     EmpModalComp,
     DepComp,
     DepListComp,
+    DepModalComp,
   ],
   imports: [
     BrowserModule,
