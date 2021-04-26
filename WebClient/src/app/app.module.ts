@@ -9,6 +9,7 @@ import { EmpModalComp } from './components/employee/emp-modal/emp-modal.comp';
 import { DepComp } from './components/department/dep.comp';
 import { DepListComp } from './components/department/dep-list/dep-list.comp';
 import { DepModalComp } from './components/department/dep-modal/dep-modal.comp';
+import { SharedService } from './services/shared/shared.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { DepModalComp } from './components/department/dep-modal/dep-modal.comp';
     HttpClientModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [SharedService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
