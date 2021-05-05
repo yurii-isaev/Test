@@ -8,11 +8,13 @@ import { SharedService } from '../../../services/shared/shared.service';
 })
 export class EmpModalComp implements OnInit {
   @Input() emp: any;
-  EmployeeId: string;
-  EmployeeName: string;
-  Department: string;
-  DateOfJoining: string;
-  DepartmentsList: any = [];
+  employeeId: string;
+  employeeName: string;
+  department: string;
+  dateOfJoining: string;
+  photoFileName: string;
+  photoFilePath: string;
+  departmentsList: any = [];
 
   constructor(private service: SharedService) {}
 
@@ -22,31 +24,46 @@ export class EmpModalComp implements OnInit {
 
   private loadDepartmentList(): void {
     this.service.getAllDepartmentNames().subscribe((data: any) => {
-      this.DepartmentsList = data;
-      this.EmployeeId = this.emp.EmployeeId;
-      this.EmployeeName = this.emp.EmployeeName;
-      this.Department = this.emp.Department;
-      this.DateOfJoining = this.emp.DateOfJoining;
+      this.departmentsList = data;
+      this.employeeId = this.emp.EmployeeId;
+      this.employeeName = this.emp.EmployeeName;
+      this.department = this.emp.Department;
+      this.dateOfJoining = this.emp.DateOfJoining;
+      this.photoFileName = this.emp.PhotoFileName;
+      this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
     });
   }
 
   addEmployee(): void {
     let object = {
-      EmployeeId: this.EmployeeId,
-      EmployeeName: this.EmployeeName,
-      Department: this.Department,
-      DateOfJoining: this.DateOfJoining
+      EmployeeId: this.employeeId,
+      EmployeeName: this.employeeName,
+      Department: this.department,
+      DateOfJoining: this.dateOfJoining,
+      PhotoFileName: this.photoFileName
     };
     this.service.addEmployee(object).subscribe(res => alert(res.toString()));
   }
 
   updateEmployee(): void {
     let object = {
-      EmployeeId: this.EmployeeId,
-      EmployeeName: this.EmployeeName,
-      Department: this.Department,
-      DateOfJoining: this.DateOfJoining
+      EmployeeId: this.employeeId,
+      EmployeeName: this.employeeName,
+      Department: this.department,
+      DateOfJoining: this.dateOfJoining,
+      PhotoFileName: this.photoFileName
     };
     this.service.updateEmployee(object).subscribe(res => alert(res.toString()));
+  }
+
+  uploadPhoto(event): void {
+    let file = event.target.files[0];
+    const formData: FormData = new FormData();
+    formData.append('uploadFile', file, file.name);
+
+    this.service.uploadPhoto(formData).subscribe((data: any) => {
+      this.photoFileName = data.toString();
+      this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
+    });
   }
 }
