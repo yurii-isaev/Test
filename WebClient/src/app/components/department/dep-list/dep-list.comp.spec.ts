@@ -36,4 +36,10 @@ describe('DepListComp', () => {
     component.updateDepartmentList();
     expect(spy.calls.any()).toBeTruthy();
   });
+
+  it('should set department list value when update department list', () => {
+    component.updateDepartmentList();
+    expect(component.departmentList).toEqual(mockList);
+    expect(component.departmentListWithoutFilter).toEqual(mockList);
+  });
 });
