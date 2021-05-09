@@ -8,7 +8,7 @@ import { SharedService } from '../../../services/shared/shared.service';
 })
 export class EmpListComp implements OnInit {
   employeeList: any = [];
-  emp: any;
+  employee: any;
   modalTitle: string;
   activateAddEditEmpComp: boolean = false;
 
@@ -23,7 +23,7 @@ export class EmpListComp implements OnInit {
   }
 
   addClick(): void {
-    this.emp = {
+    this.employee = {
       EmployeeId: 0,
       EmployeeName: '',
       Department: '',
@@ -41,7 +41,7 @@ export class EmpListComp implements OnInit {
 
   editClick(item): void {
     console.log(item);
-    this.emp = item;
+    this.employee = item;
     this.modalTitle = "Edit Employee";
     this.activateAddEditEmpComp = true;
   }
