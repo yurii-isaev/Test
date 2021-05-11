@@ -70,14 +70,18 @@ export class EmpModalComp implements OnInit {
     console.log(this.photoFileName, this.photoFilePath, this.fileToUpload);
   }
 
-  uploadPhoto(event: any): void {
-    let file = event.target.files[0];
+  uploadPhoto(): void {
     const formData: FormData = new FormData();
-    formData.append('uploadFile', file, file.name);
+    formData.append('File', this.fileToUpload, this.fileToUpload.name);
 
-    this.service.uploadPhoto(formData).subscribe((data: any) => {
-      this.photoFileName = data.toString();
-      this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
+    this.service.uploadPhoto(formData).subscribe((data: string) => {
+      try {
+        this.photoFileName = data;
+        this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
+        console.warn('Photo is saved!')
+      } catch (e) {
+        e.console.error('Photo was not saved!')
+      }
     });
   }
 
