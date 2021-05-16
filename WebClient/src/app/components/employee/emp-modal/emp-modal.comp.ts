@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SharedService } from '../../../services/shared/shared.service';
+import { IEmployee } from '../emp.comp';
 
 @Component({
   selector: 'app-emp-modal',
@@ -7,60 +8,61 @@ import { SharedService } from '../../../services/shared/shared.service';
   styleUrls: ['./emp-modal.comp.css']
 })
 export class EmpModalComp implements OnInit {
-  @Input() emp: any;
+  @Input() emp: IEmployee;
+  departmentList: string[];
   employeeId: number;
   employeeName: string;
   department: string;
   dateOfJoining: string;
   photoFileName: string;
   photoFilePath: string;
-  departmentsList: any = [];
-  fileToUpload: File = null;
+  fileToUpload: File;
+  formData: FormData;
 
-  constructor(private service: SharedService) {}
+  constructor(private service: SharedService) {
+    this.fileToUpload = null;
+    this.formData = new FormData();
+  }
 
   ngOnInit(): void {
     this.loadDepartmentList()
+    this.employeeId = this.emp.employeeId;
+    this.employeeName = this.emp.employeeName;
+    this.department = this.emp.department;
+    this.dateOfJoining = this.emp.dateOfJoining;
+    this.photoFileName = this.emp.photoFileName;
+    this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
   }
 
-  private loadDepartmentList(): void {
-    this.service.getAllDepartmentNames().subscribe((data: any) => {
-      this.departmentsList = data;
-      this.employeeId = this.emp.EmployeeId;
-      this.employeeName = this.emp.EmployeeName;
-      this.department = this.emp.Department;
-      this.dateOfJoining = this.emp.DateOfJoining;
-      this.photoFileName = this.emp.PhotoFileName;
-      this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
+  loadDepartmentList(): void {
+    this.service.getAllDepartmentNamesFromDB().subscribe((data: string[]) => {
+      this.departmentList = data;
     });
   }
 
-  addEmployee(): void {
-    let object = {
-      EmployeeId: this.employeeId,
-      EmployeeName: this.employeeName,
-      Department: this.department,
-      DateOfJoining: this.dateOfJoining,
-      PhotoFileName: this.fileToUpload.name,
-      PhotoFilePath: this.photoFilePath
+  private getEmployee(): IEmployee {
+    return this.emp = {
+      employeeId: this.employeeId,
+      employeeName: this.employeeName,
+      department: this.department,
+      dateOfJoining: this.dateOfJoining,
+      photoFileName: this.photoFileName
     };
-    this.service.addEmployee(object).subscribe(res => alert(res.toString()));
+  }
+
+  addEmployee(): void {
+    this.service.addEmployeeToDB(this.getEmployee()).subscribe((data: string) => {
+      alert(data);
+    });
   }
 
   updateEmployee(): void {
-    let object = {
-      EmployeeId: this.employeeId,
-      EmployeeName: this.employeeName,
-      Department: this.department,
-      DateOfJoining: this.dateOfJoining,
-      PhotoFileName: this.photoFileName,
-      PhotoFilePath: this.photoFilePath
-    };
-    this.service.updateEmployee(object).subscribe(res => alert(res.toString()));
-    console.log(this.photoFileName, this.photoFilePath);
+    this.service.updateEmployeeToDB(this.getEmployee()).subscribe(() => {
+      console.warn(this.photoFileName, this.photoFilePath);
+    });
   }
 
-  onFileSelected(event) {
+  onFileSelected(event: any): void {
     this.fileToUpload = event.target.files[0];
 
     // Show image preview.
@@ -71,30 +73,27 @@ export class EmpModalComp implements OnInit {
   }
 
   uploadPhoto(): void {
-    const formData: FormData = new FormData();
-    formData.append('File', this.fileToUpload, this.fileToUpload.name);
-
-    this.service.uploadPhoto(formData).subscribe((data: string) => {
+    this.formData.append('File', this.fileToUpload, this.fileToUpload.name);
+    this.service.uploadPhotoToStorage(this.formData).subscribe((data: string) => {
       try {
-        this.photoFileName = data;
+        this.photoFileName = data.toString();
         this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
-        console.warn('Photo is saved!')
+        console.warn('Photo is upload!')
       } catch (e) {
-        e.console.error('Photo was not saved!')
+        e.console.error('Photo was not upload!')
       }
     });
   }
 
   updatePhoto(employeeId: number): void {
-    const formData = new FormData();
-    formData.append('File', this.fileToUpload, this.fileToUpload.name);
-    this.service.updatePhoto(employeeId, formData).subscribe((data: string) => {
+    this.formData.append('File', this.fileToUpload, this.fileToUpload.name);
+    this.service.updatePhotoToStorage(employeeId, this.formData).subscribe((data: string) => {
       try {
-        this.photoFileName = data;
+        this.photoFileName = data.toString();
         this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
-        console.warn('Photo is saved!')
+        console.warn('Photo is update!')
       } catch (e) {
-        e.console.error('Photo were not saved!')
+        e.console.error('Photo was not update!')
       }
     });
   }
