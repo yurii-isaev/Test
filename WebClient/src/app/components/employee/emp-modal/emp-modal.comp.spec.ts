@@ -25,7 +25,7 @@ describe('EmpModalComp', () => {
     component = fixture.componentInstance;
     component.emp = <IEmployee>{employeeId: 1};
     service = fixture.debugElement.injector.get<SharedService>(SharedService as any);
-    mockList = [];
+    mockList = ['test'];
     fixture.detectChanges();
   });
 
@@ -43,5 +43,11 @@ describe('EmpModalComp', () => {
     spyOn(service, 'getAllDepartmentNamesFromDB').and.returnValue(of(mockList));
     component.loadDepartmentList();
     expect(component.departmentList).toEqual(mockList);
+  });
+
+  it('should call shared service when add employee', () => {
+    const spy = spyOn(service, 'addEmployeeToDB').and.returnValue(of(mockList[0]));
+    component.addEmployee();
+    expect(spy.calls.any()).toBeTruthy();
   });
 });
