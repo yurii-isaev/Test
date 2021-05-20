@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { IEmployee } from '../emp.comp';
+import { By } from '@angular/platform-browser';
 
 describe('EmpModalComp', () => {
   let component: EmpModalComp;
@@ -49,5 +50,12 @@ describe('EmpModalComp', () => {
     const spy = spyOn(service, 'addEmployeeToDB').and.returnValue(of(mockList[0]));
     component.addEmployee();
     expect(spy.calls.any()).toBeTruthy();
+  });
+
+  it('should call update employee method when click on update button', () => {
+    spyOn(component, 'updateEmployee');
+    const btn = fixture.debugElement.query(By.css('.update'));
+    btn.triggerEventHandler('click', null);
+    expect(component.updateEmployee).toHaveBeenCalled();
   });
 });
