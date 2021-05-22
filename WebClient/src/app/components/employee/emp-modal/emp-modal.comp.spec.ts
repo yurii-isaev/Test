@@ -64,4 +64,12 @@ describe('EmpModalComp', () => {
     component.updateEmployee();
     expect(spy.calls.any()).toBeTruthy();
   });
+
+  it('should call event when select photo file', () => {
+    const fakeChangeEvent = new Event('change');
+    spyOn(component, 'onFileSelected');
+    let elem = document.getElementById('input');
+    elem.dispatchEvent(fakeChangeEvent);
+    expect(component.onFileSelected).toHaveBeenCalledWith(fakeChangeEvent);
+  });
 });
