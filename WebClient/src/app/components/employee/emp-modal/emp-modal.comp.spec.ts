@@ -82,4 +82,10 @@ describe('EmpModalComp', () => {
     expect((window as any).FileReader).toHaveBeenCalled();
     expect(mockReader.readAsDataURL).toHaveBeenCalledWith(mockFile);
   });
+
+  it('should call shared service when upload photo file', () => {
+    const spy = spyOn(service, 'uploadPhotoToStorage').and.returnValue(of(mockList[0]));
+    component.uploadPhoto();
+    expect(spy.calls.any()).toBeTruthy();
+  });
 });
