@@ -94,4 +94,11 @@ describe('EmpModalComp', () => {
     component.uploadPhoto();
     expect(component.photoFileName).toEqual(mockList[0]);
   });
+
+  it('should call update photo method when click on button', () => {
+    spyOn(component, 'updatePhoto');
+    const btn = fixture.debugElement.query(By.css('.but'));
+    btn.triggerEventHandler('click', null);
+    expect(component.updatePhoto).toHaveBeenCalled();
+  });
 });
