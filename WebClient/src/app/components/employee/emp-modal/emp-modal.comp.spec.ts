@@ -101,4 +101,10 @@ describe('EmpModalComp', () => {
     btn.triggerEventHandler('click', null);
     expect(component.updatePhoto).toHaveBeenCalled();
   });
+
+  it('should call shared service when update photo file', () => {
+    const spy = spyOn(service, 'updatePhotoToStorage').and.returnValue(of(mockList[0]));
+    component.updatePhoto(1);
+    expect(spy.calls.any()).toBeTruthy();
+  });
 });
