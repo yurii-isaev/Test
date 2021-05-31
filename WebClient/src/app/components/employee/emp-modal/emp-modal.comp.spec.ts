@@ -107,4 +107,10 @@ describe('EmpModalComp', () => {
     component.updatePhoto(1);
     expect(spy.calls.any()).toBeTruthy();
   });
+
+  it('should set photo name value when update photo file', () => {
+    spyOn(service, 'updatePhotoToStorage').and.returnValue(of(mockList[0]));
+    component.updatePhoto(1);
+    expect(component.photoFileName).toEqual(mockList[0]);
+  });
 });
