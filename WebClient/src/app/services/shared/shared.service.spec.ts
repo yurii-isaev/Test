@@ -139,6 +139,20 @@ describe('SharedService', () => {
     })
   );
 
+  it('should return a upload photo file name from database',
+    inject([SharedService, HttpTestingController], (service: SharedService, backend: HttpTestingController) => {
+      const mockPhotoName = 'photo name';
+      service.uploadPhotoToStorage(formData).subscribe((response: string) =>
+        expect(response).toEqual(mockPhotoName)
+      );
+      backend.expectOne({
+        method: 'POST',
+        url: 'http://localhost:5000/api/employee/UploadPhoto/'
+      })
+        .flush(mockPhotoName);
+    })
+  );
+
   it('should return a update photo file name from database',
     inject([SharedService, HttpTestingController], (service: SharedService, backend: HttpTestingController) => {
       const mockPhotoName = 'photo name';
