@@ -1,23 +1,39 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EmpListComp } from './emp-list.comp';
+import { SharedService } from '../../../services/shared/shared.service';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 
 describe('EmpListComp', () => {
   let component: EmpListComp;
   let fixture: ComponentFixture<EmpListComp>;
+  let service: SharedService;
+  let mockList: string[];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EmpListComp]
-    }).compileComponents();
+      declarations: [EmpListComp],
+      imports: [HttpClientModule, FormsModule]
+    })
+      .compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EmpListComp);
     component = fixture.componentInstance;
+    service = fixture.debugElement.injector.get<SharedService>(SharedService as any);
+    mockList = [];
     fixture.detectChanges();
   });
 
   it('should create employee list component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call shared service when update employee list', () => {
+    const spy = spyOn(service, 'getEmployeeListFromDB').and.returnValue(of(mockList));
+    component.updateEmployeeList();
+    expect(spy.calls.any()).toBeTruthy();
   });
 });
