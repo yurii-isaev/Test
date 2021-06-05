@@ -51,4 +51,10 @@ describe('EmpListComp', () => {
     component.showConfirmDeleteEmployee(mock);
     expect(window.confirm).toHaveBeenCalled();
   });
+
+  it('should call shared service when delete employee', () => {
+    const spy = spyOn(service, 'deleteEmployeeFromDB').and.returnValue(of(mock.employeeName));
+    component.deleteEmployee(mock);
+    expect(spy.calls.any()).toBeTruthy();
+  });
 });
