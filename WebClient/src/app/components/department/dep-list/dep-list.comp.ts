@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SharedService } from '../../../services/shared/shared.service';
+import { IDepartment } from '../dep.comp';
 
 @Component({
   selector: 'app-dep-list',
@@ -7,14 +8,14 @@ import { SharedService } from '../../../services/shared/shared.service';
   styleUrls: ['./dep-list.comp.css']
 })
 export class DepListComp implements OnInit {
-  departmentList: any = [];
-  dep: any;
-  activateAddEditDepComp: boolean = false;
+  department: IDepartment;
+  departmentList: IDepartment[];
+  activateAddEditDepComp: boolean;
   modalTitle: string;
 
-  departmentIdFilter: string = '';
-  departmentNameFilter: string = '';
-  departmentListWithoutFilter: any = [];
+  departmentIdFilter: string;
+  departmentNameFilter: string;
+  departmentListWithoutFilter: any[];
 
   constructor(private service: SharedService) {}
 
@@ -23,56 +24,68 @@ export class DepListComp implements OnInit {
   }
 
   updateDepartmentList(): void {
-    this.service.getDepartmentList().subscribe(data => {
-      this.departmentList = data;
-      this.departmentListWithoutFilter = data;
+    this.service.getDepartmentListFromDB().subscribe((response: IDepartment[]) => {
+      this.departmentList = response;
+      this.departmentListWithoutFilter = response;
+
+      this.activateAddEditDepComp = false;
+      this.departmentIdFilter = '';
+      this.departmentNameFilter = '';
     });
   }
 
-  addClick(): void {
-    this.dep = {
-      DepartmentId: 0,
-      DepartmentName: ''
+  addDepartment(): void {
+    this.department = {
+      departmentId: 0,
+      departmentName: ''
     };
     this.modalTitle = 'Add Department';
     this.activateAddEditDepComp = true;
   }
 
-  closeClick(): void {
+  closeDepartmentModal(): void {
+    this.activateAddEditDepComp = false
     this.updateDepartmentList();
-    this.activateAddEditDepComp = false;
   }
 
-  editClick(item: any): void {
-    this.dep = item;
+  editDepartment(item: IDepartment): void {
+    this.department = item;
     this.modalTitle = 'Edit Department';
     this.activateAddEditDepComp = true;
   }
 
-  deleteClick(item): void {
-    if (confirm('Are you sure?')) {
-      this.service.deleteDepartment(item.DepartmentId).subscribe(data => {
-        alert(data.toString());
-        this.updateDepartmentList();
-      });
-    }
+  showConfirmDeleteDepartment(item: IDepartment): void {
+    if (confirm('Are you sure??'))
+      this.deleteDepartment(item);
   }
 
-  filterData() {
+  deleteDepartment(item: IDepartment): void {
+    this.service.deleteDepartmentFromDB(item.departmentId).subscribe((response: string) => {
+      try {
+        alert(response);
+        this.updateDepartmentList();
+        console.warn('Employee deleted!')
+      } catch (e) {
+        e.console.error('Employee not deleted!')
+      }
+    });
+  }
+
+  filterData(): void {
     let depIdFilter = this.departmentIdFilter;
     let depNameFilter = this.departmentNameFilter;
 
-    this.departmentList = this.departmentListWithoutFilter.filter(function (el) {
-      return el.DepartmentId.toString().toLowerCase()
+    this.departmentList = this.departmentListWithoutFilter.filter((dep: IDepartment) => {
+      return dep.departmentId.toString().toLowerCase()
           .includes(depIdFilter.toString().trim().toLowerCase())
         &&
-        el.DepartmentName.toString().toLowerCase()
+        dep.departmentName.toString().toLowerCase()
           .includes(depNameFilter.toString().trim().toLowerCase())
     });
   }
 
-  sortResult(prop: string, asc: boolean) {
-    this.departmentList = this.departmentListWithoutFilter.sort(function (a, b) {
+  sortResult(prop: string, asc: boolean): void {
+    this.departmentList = this.departmentListWithoutFilter.sort((a, b) => {
       if (asc) {
         return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
       } else {
