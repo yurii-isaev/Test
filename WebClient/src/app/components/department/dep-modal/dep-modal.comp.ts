@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SharedService } from '../../../services/shared/shared.service';
+import { IDepartment } from '../dep.comp';
 
 @Component({
   selector: 'app-dep-modal',
@@ -8,29 +9,30 @@ import { SharedService } from '../../../services/shared/shared.service';
 })
 export class DepModalComp implements OnInit {
   @Input() dep: any;
-  departmentId: string;
+  departmentId: number;
   departmentName: string;
 
   constructor(private service: SharedService) {}
 
   ngOnInit(): void {
-    this.departmentId = this.dep.DepartmentId;
-    this.departmentName = this.dep.DepartmentName;
+    this.departmentId = this.dep.departmentId;
+    this.departmentName = this.dep.departmentName;
+  }
+
+  getDepartment(): IDepartment {
+    return this.dep = {
+      departmentId: this.departmentId,
+      departmentName: this.departmentName
+    };
   }
 
   addDepartment(): void {
-    let object = {
-      DepartmentId: this.departmentId,
-      DepartmentName: this.departmentName
-    };
-    this.service.addDepartment(object).subscribe(res => alert(res.toString()));
+    this.service.addDepartmentToDB(this.getDepartment())
+      .subscribe((response: string) => alert(response));
   }
 
   updateDepartment(): void {
-    let object = {
-      DepartmentId: this.departmentId,
-      DepartmentName: this.departmentName
-    };
-    this.service.updateDepartment(object).subscribe(res => alert(res.toString()));
+    this.service.updateDepartmentToDB(this.getDepartment())
+      .subscribe((response: string) => alert(response));
   }
 }
