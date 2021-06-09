@@ -43,4 +43,10 @@ describe('DepListComp', () => {
     component.updateDepartmentList();
     expect(component.departmentList).toEqual(mockList);
   });
+
+  it('should set department list filter value when update department list', () => {
+    spyOn(service, 'getDepartmentListFromDB').and.returnValue(of(mockList));
+    component.updateDepartmentList();
+    expect(component.departmentListWithoutFilter).toEqual(mockList);
+  });
 });
