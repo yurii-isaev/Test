@@ -24,7 +24,7 @@ describe('DepListComp', () => {
     fixture = TestBed.createComponent(DepListComp);
     component = fixture.componentInstance;
     service = fixture.debugElement.injector.get<SharedService>(SharedService as any);
-    mockList = [];
+    mockList = [{departmentId: 1, departmentName: ''}];
     fixture.detectChanges();
   });
 
@@ -48,5 +48,11 @@ describe('DepListComp', () => {
     spyOn(service, 'getDepartmentListFromDB').and.returnValue(of(mockList));
     component.updateDepartmentList();
     expect(component.departmentListWithoutFilter).toEqual(mockList);
+  });
+
+  it('should call shared service when delete department', () => {
+    const spy = spyOn(service, 'deleteDepartmentFromDB').and.returnValue(of(mockList[0].departmentName));
+    component.deleteDepartment(mockList[0]);
+    expect(spy.calls.any()).toBeTruthy();
   });
 });
