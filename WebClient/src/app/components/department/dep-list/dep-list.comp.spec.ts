@@ -4,6 +4,7 @@ import { DepListComp } from './dep-list.comp';
 import { SharedService } from '../../../services/shared/shared.service';
 import { of } from 'rxjs';
 import { IDepartment } from '../dep.comp';
+import { By } from '@angular/platform-browser';
 
 describe('DepListComp', () => {
   let component: DepListComp;
@@ -48,6 +49,13 @@ describe('DepListComp', () => {
     spyOn(service, 'getDepartmentListFromDB').and.returnValue(of(mockList));
     component.updateDepartmentList();
     expect(component.departmentListWithoutFilter).toEqual(mockList);
+  });
+
+  it('should call add department method when click on button', () => {
+    spyOn(component, 'addDepartment');
+    const btn = fixture.debugElement.query(By.css('.btn-float'));
+    btn.triggerEventHandler('click', null);
+    expect(component.addDepartment).toHaveBeenCalled();
   });
 
   it('should call shared service when delete department', () => {
