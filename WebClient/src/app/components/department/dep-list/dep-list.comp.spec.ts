@@ -58,6 +58,13 @@ describe('DepListComp', () => {
     expect(component.addDepartment).toHaveBeenCalled();
   });
 
+  it('should call close modal method when click on button', () => {
+    spyOn(component, 'closeDepartmentModal');
+    const btn = fixture.debugElement.query(By.css('.btn-close'));
+    btn.triggerEventHandler('click', null);
+    expect(component.closeDepartmentModal).toHaveBeenCalled();
+  });
+
   it('should call shared service when delete department', () => {
     const spy = spyOn(service, 'deleteDepartmentFromDB').and.returnValue(of(mockList[0].departmentName));
     component.deleteDepartment(mockList[0]);
