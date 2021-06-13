@@ -70,4 +70,11 @@ describe('DepListComp', () => {
     component.deleteDepartment(mockList[0]);
     expect(spy.calls.any()).toBeTruthy();
   });
+
+  it('should call filter data method when click on button', () => {
+    spyOn(component, 'filterData');
+    const btn = fixture.debugElement.query(By.css('.form-control'));
+    btn.triggerEventHandler('keyup', null);
+    expect(component.filterData).toHaveBeenCalled();
+  });
 });
