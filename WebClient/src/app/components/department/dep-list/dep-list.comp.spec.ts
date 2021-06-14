@@ -77,4 +77,11 @@ describe('DepListComp', () => {
     btn.triggerEventHandler('keyup', null);
     expect(component.filterData).toHaveBeenCalled();
   });
+
+  it('should call sort result method when click on button', () => {
+    spyOn(component, 'sortResult');
+    const btn = fixture.debugElement.query(By.css('.sort'));
+    btn.triggerEventHandler('click', null);
+    expect(component.sortResult).toHaveBeenCalled();
+  });
 });
