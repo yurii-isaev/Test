@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IDepartment } from '../dep.comp';
 import { SharedService } from '../../../services/shared/shared.service';
 import { of } from 'rxjs';
+import { By } from '@angular/platform-browser';
 
 describe('DepModalComp', () => {
   let component: DepModalComp;
@@ -37,5 +38,12 @@ describe('DepModalComp', () => {
     const spy = spyOn(service, 'addDepartmentToDB').and.returnValue(of(mockList[0]));
     component.addDepartment();
     expect(spy.calls.any()).toBeTruthy();
+  });
+
+  it('should call update department method when click on button', () => {
+    spyOn(component, 'updateDepartment');
+    const btn = fixture.debugElement.query(By.css('.btn'));
+    btn.triggerEventHandler('click', null);
+    expect(component.updateDepartment).toHaveBeenCalled();
   });
 });
