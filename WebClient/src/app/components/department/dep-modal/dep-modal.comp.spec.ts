@@ -46,4 +46,10 @@ describe('DepModalComp', () => {
     btn.triggerEventHandler('click', null);
     expect(component.updateDepartment).toHaveBeenCalled();
   });
+
+  it('should call shared service when update department', () => {
+    const spy = spyOn(service, 'updateDepartmentToDB').and.returnValue(of(mockList[0]));
+    component.updateDepartment();
+    expect(spy.calls.any()).toBeTruthy();
+  });
 });
