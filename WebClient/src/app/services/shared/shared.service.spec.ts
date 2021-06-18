@@ -1,15 +1,36 @@
-import { TestBed } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 import { SharedService } from './shared.service';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { IDepartment } from '../../components/department/dep.comp';
 
 describe('SharedService', () => {
   let service: SharedService;
+  let formData: FormData;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientModule, HttpClientTestingModule]
+    });
     service = TestBed.inject(SharedService);
+    formData = new FormData();
   });
 
-  it('should be created shared service', () => {
+  it('should create the shared service', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should return a department list from database', inject([SharedService, HttpTestingController],
+    (service: SharedService, backend: HttpTestingController) => {
+      const mockDepartmentList: IDepartment[] = [];
+      service.getDepartmentListFromDB().subscribe((response: IDepartment[]) =>
+        expect(response).toEqual(mockDepartmentList)
+      );
+      backend.expectOne({
+        method: 'GET',
+        url: 'http://localhost:5000/api/department'
+      })
+        .flush(mockDepartmentList);
+    })
+  );
 });
