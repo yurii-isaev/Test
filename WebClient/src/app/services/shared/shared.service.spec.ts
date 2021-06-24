@@ -48,4 +48,19 @@ describe('SharedService', () => {
         .flush(mockReport);
     })
   );
+
+  it('should return a execution report when update department to database',
+    inject([SharedService, HttpTestingController], (service: SharedService, backend: HttpTestingController) => {
+      const mockDepartment: IDepartment = <IDepartment>{};
+      const mockReport: string = 'Update successful';
+      service.updateDepartmentToDB(mockDepartment).subscribe((response: string) =>
+        expect(response).toEqual(mockReport)
+      );
+      backend.expectOne({
+        method: 'PUT',
+        url: 'http://localhost:5000/api/department'
+      })
+        .flush(mockReport);
+    })
+  );
 });
