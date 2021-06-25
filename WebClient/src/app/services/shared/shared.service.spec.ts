@@ -63,4 +63,19 @@ describe('SharedService', () => {
         .flush(mockReport);
     })
   );
+
+  it('should return a execution report when delete department to database',
+    inject([SharedService, HttpTestingController], (service: SharedService, backend: HttpTestingController) => {
+      const mockDepartmentID: number = 1;
+      const mockReport: string = 'Delete successful';
+      service.deleteDepartmentFromDB(mockDepartmentID).subscribe((response: string) =>
+        expect(response).toEqual(mockReport)
+      );
+      backend.expectOne({
+        method: 'DELETE',
+        url: 'http://localhost:5000/api/department/' + mockDepartmentID
+      })
+        .flush(mockReport);
+    })
+  );
 });
