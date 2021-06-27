@@ -93,4 +93,19 @@ describe('SharedService', () => {
         .flush(mockEmployeeList);
     })
   );
+
+  it('should return a execution report when add employee to database',
+    inject([SharedService, HttpTestingController], (service: SharedService, backend: HttpTestingController) => {
+      const mockEmployee: IEmployee = <IEmployee>{};
+      const mockReport: string = 'Created Successfully';
+      service.addEmployeeToDB(mockEmployee).subscribe((response: string) =>
+        expect(response).toEqual(mockReport)
+      );
+      backend.expectOne({
+        method: 'POST',
+        url: 'http://localhost:5000/api/employee/'
+      })
+        .flush(mockReport);
+    })
+  );
 });
