@@ -123,4 +123,19 @@ describe('SharedService', () => {
         .flush(mockReport);
     })
   );
+
+  it('should return a execution report when delete employee to database',
+    inject([SharedService, HttpTestingController], (service: SharedService, backend: HttpTestingController) => {
+      const mockEmployeeID: number = 1;
+      const mockReport: string = 'Delete successful';
+      service.deleteEmployeeFromDB(mockEmployeeID).subscribe((response: string) =>
+        expect(response).toEqual(mockReport)
+      );
+      backend.expectOne({
+        method: 'DELETE',
+        url: 'http://localhost:5000/api/employee/' + mockEmployeeID
+      })
+        .flush(mockReport);
+    })
+  );
 });
