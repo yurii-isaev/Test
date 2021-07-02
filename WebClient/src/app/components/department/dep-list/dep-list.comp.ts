@@ -12,10 +12,9 @@ export class DepListComp implements OnInit {
   departmentList: IDepartment[];
   activateAddEditDepComp: boolean;
   modalTitle: string;
-
   departmentIdFilter: string;
   departmentNameFilter: string;
-  departmentListWithoutFilter: any[];
+  departmentListWithoutFilter: IDepartment[];
 
   constructor(private service: SharedService) {}
 
@@ -27,7 +26,6 @@ export class DepListComp implements OnInit {
     this.service.getDepartmentListFromDB().subscribe((response: IDepartment[]) => {
       this.departmentList = response;
       this.departmentListWithoutFilter = response;
-
       this.activateAddEditDepComp = false;
       this.departmentIdFilter = '';
       this.departmentNameFilter = '';
@@ -48,19 +46,19 @@ export class DepListComp implements OnInit {
     this.updateDepartmentList();
   }
 
-  editDepartment(item: IDepartment): void {
-    this.department = item;
+  editDepartment(dataItem: IDepartment): void {
+    this.department = dataItem;
     this.modalTitle = 'Edit Department';
     this.activateAddEditDepComp = true;
   }
 
-  showConfirmDeleteDepartment(item: IDepartment): void {
+  showConfirmDeleteDepartment(dataItem: IDepartment): void {
     if (confirm('Are you sure??'))
-      this.deleteDepartment(item);
+      this.deleteDepartment(dataItem);
   }
 
-  deleteDepartment(item: IDepartment): void {
-    this.service.deleteDepartmentFromDB(item.departmentId).subscribe((response: string) => {
+  deleteDepartment(dataItem: IDepartment): void {
+    this.service.deleteDepartmentFromDB(dataItem.departmentId).subscribe((response: string) => {
       try {
         alert(response);
         this.updateDepartmentList();
@@ -71,7 +69,7 @@ export class DepListComp implements OnInit {
     });
   }
 
-  filterData(): void {
+  toFilterDepartmentList(): void {
     let depIdFilter = this.departmentIdFilter;
     let depNameFilter = this.departmentNameFilter;
 
@@ -84,8 +82,8 @@ export class DepListComp implements OnInit {
     });
   }
 
-  sortResult(prop: string, asc: boolean): void {
-    this.departmentList = this.departmentListWithoutFilter.sort((a, b) => {
+  toSortDepartmentList(prop: string, asc: boolean): void {
+    this.departmentList = this.departmentList.sort((a, b) => {
       if (asc) {
         return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
       } else {
