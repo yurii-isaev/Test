@@ -13,6 +13,12 @@ export class EmpListComp implements OnInit {
   modalTitle: string;
   activateAddEditEmpComp: boolean;
 
+  empListWithoutFilter: IEmployee[];
+  empIdFilter: string;
+  empNameFilter: string;
+  empDepartmentFilter: string;
+  empDateOfJoiningFilter: string;
+
   constructor(private service: SharedService) {
     this.activateAddEditEmpComp = false;
   }
@@ -67,4 +73,17 @@ export class EmpListComp implements OnInit {
       }
     })
   };
+
+  toFilterEmployeeList(): void {
+    this.employeeList = this.empListWithoutFilter.filter((employee) => {
+      return employee.employeeId.toString().toLowerCase()
+          .includes(this.empIdFilter.toString().trim().toLowerCase())
+        && employee.employeeName.toString().toLowerCase()
+          .includes(this.empNameFilter.toString().trim().toLowerCase())
+        && employee.department.toString().toLowerCase()
+          .includes(this.empDepartmentFilter.toString().trim().toLowerCase())
+        && employee.dateOfJoining.toString().toLowerCase()
+          .includes(this.empDateOfJoiningFilter.toString().trim().toLowerCase())
+    });
+  }
 }
