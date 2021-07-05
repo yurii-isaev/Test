@@ -18,6 +18,7 @@ export class EmpListComp implements OnInit {
   empNameFilter: string;
   empDepartmentFilter: string;
   empDateOfJoiningFilter: string;
+  photoFilePath: string;
 
   constructor(private service: SharedService) {
     this.activateAddEditEmpComp = false;
@@ -31,6 +32,12 @@ export class EmpListComp implements OnInit {
     this.service.getEmployeeListFromDB().subscribe((response: IEmployee[]) => {
       this.employeeList = response
     });
+  }
+
+  showEmployeePhoto(dataItem: IEmployee): string {
+    this.employee = dataItem;
+    this.photoFilePath = this.service.PhotoUrl + this.employee.photoFileName;
+    return this.photoFilePath;
   }
 
   addEmployee(): void {
@@ -54,7 +61,6 @@ export class EmpListComp implements OnInit {
     this.employee = item;
     this.modalTitle = "Edit Employee";
     this.activateAddEditEmpComp = true;
-    console.warn(item);
   }
 
   showConfirmDeleteEmployee(item: IEmployee): void {

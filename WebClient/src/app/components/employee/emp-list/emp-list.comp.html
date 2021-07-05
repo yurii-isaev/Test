@@ -31,6 +31,16 @@
           <input class="form-control" [(ngModel)]="empIdFilter"
                  (keyup)="toFilterEmployeeList()" placeholder="Filter ID">
         </label>
+      </div>
+      Photo
+    </th>
+    <th>
+      <!-- ID filter -->
+      <div class="d-flex flex-row">
+        <label>
+          <input class="form-control" id="filterId" [(ngModel)]="empIdFilter"
+                 (keyup)="toFilterEmployeeList()" placeholder="Filter ID">
+        </label>
         <!-- Sort button-->
         <button type="button" class="btn btn-light sort" (click)="toSortEmployeeList('employeeId', true)">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-square-fill" viewBox="0 0 16 16">
@@ -43,7 +53,7 @@
           </svg>
         </button>
       </div>
-      EmployeeId
+      ID
     </th>
     <th>
       <!-- Name filter -->
@@ -64,7 +74,7 @@
           </svg>
         </button>
       </div>
-      EmployeeName
+      Name
     </th>
     <th>
       <!-- Department filter -->
@@ -113,6 +123,7 @@
   </thead>
   <tbody>
   <tr *ngFor="let dataItem of employeeList">
+    <td><img [src]=showEmployeePhoto(dataItem)></td>
     <td>{{dataItem["EmployeeId"]}}</td>
     <td>{{dataItem["EmployeeName"]}}</td>
     <td>{{dataItem["Department"]}}</td>
