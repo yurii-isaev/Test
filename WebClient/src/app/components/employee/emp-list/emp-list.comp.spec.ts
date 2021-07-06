@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { IEmployee } from '../emp.comp';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('EmpListComp', () => {
   let component: EmpListComp;
@@ -16,7 +17,8 @@ describe('EmpListComp', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [EmpListComp],
-      imports: [HttpClientModule, FormsModule]
+      imports: [HttpClientModule, FormsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
       .compileComponents();
   });
@@ -26,7 +28,7 @@ describe('EmpListComp', () => {
     component = fixture.componentInstance;
     service = fixture.debugElement.injector.get<SharedService>(SharedService as any);
     mockList = [];
-    mock = <IEmployee>{employeeId: 1, employeeName: 'test'};
+    mock = <IEmployee>{};
     fixture.detectChanges();
   });
 
@@ -44,6 +46,12 @@ describe('EmpListComp', () => {
     spyOn(service, 'getEmployeeListFromDB').and.returnValue(of(mockList));
     component.updateEmployeeList();
     expect(component.employeeList).toEqual(mockList);
+  });
+
+  it('should call show employee photo method with param', () => {
+    spyOn(component, 'showEmployeePhoto').and.returnValue('path');
+    component.showEmployeePhoto(mock);
+    expect(component.showEmployeePhoto).toHaveBeenCalledWith(mock);
   });
 
   it('should call confirm window when show confirm', () => {
