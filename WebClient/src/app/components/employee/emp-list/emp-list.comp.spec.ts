@@ -60,6 +60,13 @@ describe('EmpListComp', () => {
     expect(window.confirm).toHaveBeenCalled();
   });
 
+  it("should call alert window with a value when delete employee", () => {
+    spyOn(service, 'deleteEmployeeFromDB').and.returnValue(of('Delete successful'));
+    const alert = spyOn(window, 'alert');
+    component.deleteEmployee(mock);
+    expect(alert).toHaveBeenCalledWith('Delete successful');
+  });
+
   it('should call shared service when delete employee', () => {
     const spy = spyOn(service, 'deleteEmployeeFromDB').and.returnValue(of(mock.employeeName));
     component.deleteEmployee(mock);
