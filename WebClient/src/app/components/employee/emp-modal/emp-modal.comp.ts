@@ -18,10 +18,12 @@ export class EmpModalComp implements OnInit {
   photoFilePath: string;
   fileToUpload: File;
   formData: FormData;
+  buttonClicked: boolean;
 
   constructor(private service: SharedService) {
     this.fileToUpload = null;
     this.formData = new FormData();
+    this.buttonClicked = false;
   }
 
   ngOnInit(): void {
@@ -51,14 +53,14 @@ export class EmpModalComp implements OnInit {
   }
 
   addEmployee(): void {
-    this.service.addEmployeeToDB(this.getEmployee()).subscribe((data: string) => {
-      alert(data);
+    this.service.addEmployeeToDB(this.getEmployee()).subscribe(() => {
+      console.warn(this.photoFilePath);
     });
   }
 
   updateEmployee(): void {
     this.service.updateEmployeeToDB(this.getEmployee()).subscribe(() => {
-      console.warn(this.photoFileName, this.photoFilePath);
+      console.warn(this.photoFilePath);
     });
   }
 
@@ -70,30 +72,39 @@ export class EmpModalComp implements OnInit {
     reader.onload = (event: any) => this.photoFilePath = event.target.result;
     reader.readAsDataURL(this.fileToUpload);
     console.log(this.photoFileName, this.photoFilePath, this.fileToUpload);
+
+    this.formData.append('File', this.fileToUpload, this.fileToUpload.name);
+    this.buttonClicked = true;
   }
 
-  uploadPhoto(): void {
-    this.formData.append('File', this.fileToUpload, this.fileToUpload.name);
+  uploadEmployeeData(): void {
     this.service.uploadPhotoToStorage(this.formData).subscribe((data: string) => {
       try {
-        this.photoFileName = data.toString();
+        this.photoFileName = data;
         this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
-        console.warn('Photo is upload!')
+        this.addEmployee();
+        console.warn('Employee data add')
       } catch (e) {
-        e.console.error('Photo was not upload!')
+        e.console.error('Employee data not add')
       }
     });
   }
 
-  updatePhoto(employeeId: number): void {
-    this.formData.append('File', this.fileToUpload, this.fileToUpload.name);
+  updateEmployeeData(employeeId: number): void {
     this.service.updatePhotoToStorage(employeeId, this.formData).subscribe((data: string) => {
       try {
-        this.photoFileName = data.toString();
-        this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
-        console.warn('Photo is update!')
+        if (data == 'anonymous.png') {
+          this.photoFileName = this.emp.photoFileName;
+          this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
+          this.updateEmployee();
+        } else {
+          this.photoFileName = data;
+          this.photoFilePath = this.service.PhotoUrl + this.photoFileName;
+          this.updateEmployee()
+        }
+        console.warn('Employee data update')
       } catch (e) {
-        e.console.error('Photo was not update!')
+        e.console.error('Employee data not update')
       }
     });
   }
